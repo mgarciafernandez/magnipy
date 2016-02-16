@@ -1,6 +1,12 @@
-import numpy, math, json, os, ROOT
+import numpy, math, json, os, ROOT, scipy.special, scipy.interpolate
 
 __GRAPHIX__ = 'ROOT'
+
+def GetNSigmas(chi2):
+	sigmas = numpy.linspace(0,20,1000)
+	prob   = map(lambda x : scipy.special.erf(x/math.sqrt(2)), sigmas)
+	f = scipy.interpolate.interp1d(prob,sigmas,kind='linear')
+	return f(1-chi2)
 
 
 class CorrelationFunction(object):
@@ -100,7 +106,7 @@ class DataW(CorrelationFunction):
 			raise Exception
 		else:
 			self.covariance_ = numpy.loadtxt(path)
-			self.Nth_        = math.sqrt(self.covariance_.size)
+			self.Nth_        = int(math.sqrt(self.covariance_.size))
 
 			if path[0] != '/':
 				if path[0] == '.':
