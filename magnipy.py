@@ -137,10 +137,11 @@ class TheoMagW(CorrelationFunction):
 		self.pathWtheta_ = ''
 
 	def ReadFunction(self,path):
-		self.angle_ = numpy.readtxt(path,usecols=[0])
-		self.w0_    = numpy.readtxt(path,usecols=[1])
+		self.angle_ = numpy.loadtxt(path,usecols=[0])
+		self.w0_    = numpy.loadtxt(path,usecols=[1])
 		self.Nth_   = len(self.w0_)
 		self.w_     = map(lambda x: x*self.alpha_*self.bias_,self.w0_)
+		self.error_ = numpy.zeros([self.Nth_])
 		
 		if path[0] != '/':
 			if path[0] == '.':
