@@ -48,7 +48,7 @@ def GetMaskArray(filename=None,ra=[],dec=[],units='degrees'):
 		filename (str): The path to the HEALPix mask.
 		ra (array): An array of floats containing the ra of each point of the sky.
 		dec (array): An array of floats containing the dec of each point of the sky.
-		units (str): Units of the input ra and dec. Degrees, Arcmin or Radians.
+		units (str): Units of the input ra and dec. Degrees, arcmin or rad
 
 	-Output:
 		maskvalues (list): a list containing the value of the HEALPIx mask on each point. 
@@ -75,7 +75,7 @@ def GetMaskArray(filename=None,ra=[],dec=[],units='degrees'):
 	nside    = fits.open(filename)[1].header['naxis1']
 	
 	if ordering == 'NESTED':
-		isnest = True:
+		isnest = True
 	elif ordering == 'RING':
 		isnest = False
 	else:
@@ -94,7 +94,7 @@ def GetMaskArray(filename=None,ra=[],dec=[],units='degrees'):
 	return maskvalues
 
 
-def GetMasterMask(logic=None,*arg)
+def GetMasterMask(logic=None,*arg):
 	"""
 	Builds a binary mask such that 0 means not in the mask and 1 means in the mask.
 	The mask is build as a HEALPix map form other HEALPix masks.
@@ -114,7 +114,7 @@ def GetMasterMask(logic=None,*arg)
 
 	conditions = logic.split(';')
 	for condition_ in conditions:
-		if not len(condition_.split(',')) == 2):
+		if not len(condition_.split(',')) == 2:
 			raise SyntaxError('Condition syntax incorrect.')
 	if not len(conditions) == len(arg):
 		raise ValueError('Not given the same number of conditions as masks.')
