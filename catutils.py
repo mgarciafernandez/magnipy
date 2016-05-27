@@ -148,7 +148,7 @@ def GetMasterMask(logic=None,*arg):
 
 	return mask
 
-def TxtToFits(filein=None,fileout=None)
+def TxtToFits(filein=None,fileout=None):
 	"""
 	Converts .csv (as read from desdb with E. Sheldon library) to a FITS table.
 
@@ -164,6 +164,7 @@ def TxtToFits(filein=None,fileout=None)
 	table = [ [] for _ in colnames ]
 
 	with open(filein) as csv:
+		line = csv.readline()
 		line = csv.readline()
 
 		while not line == '':
