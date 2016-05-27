@@ -159,7 +159,7 @@ def TxtToFits(filein=None,fileout=None):
 
 	with open(filein) as csv:
 		line = csv.readline()
-	colnames = line.split(',')
+	colnames = [ line_.translate(None,'\n') for line_ in lineline.split(',') ]
 
 	table = [ [] for _ in colnames ]
 
