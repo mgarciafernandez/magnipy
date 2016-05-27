@@ -175,7 +175,7 @@ def TxtToFits(filein=None,fileout=None):
 				table[col_].append( float(cols[col_]) )
 		csv.close()
 
-	types = [ numpy.float32 for _ in colnames ]
+	types = [ 'E' for _ in colnames ]
 	columnlist = map(lambda name_,format_,array_: fits.Column( name=name_,format=format_,array=array_ ),colnames,types,table)
 	
 	cols  = fits.ColDefs(columnlist)
