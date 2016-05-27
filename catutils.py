@@ -93,6 +93,40 @@ def GetMaskArray(filename=None,ra=[],dec=[],units='degrees'):
 
 	return maskvalues
 
+def Mask(filecat=None,filemask=[],maskname=[]):
+	"""
+	Given a Fits file, appends the value of the mask to the table fits on a new file 
+	-Input:
+		filecat (str): The name of the file with the catalog.
+		filemask (list): List of the names of the file with the mask.
+		maskname (list): List of the names of the new field
+	"""
+
+	if len(filemask) == 0:
+		raise ValueError('No mask given.')
+	if not len(filemask) == len(maskname):
+		raise ValueError('The number of files and headers does not match.')
+
+	catalog       = fits.open(filecat)[1].data
+	columnnames   = fits.open(filecat)[1].columns.names
+	columnformats = fits.open(filecat)[1].columns.formats
+
+	masklist = []
+	for file_ in filemask:
+		masklist.append( GetMaskArray(file_,catalog['ra'],catalog['dec']) )
+
+
+	columns  = [ catalog[col_] for col_ in columnnames ]
+	columns       += masklist
+	columnnames   += maskname
+	columnformats += [ 'E' for name_ in maskname ]
+
+	columnlist = map(lambda name_,format_,array_: fits.Column( name=name_,format=format_,array=array_ ),columnnames,columnformats,columns)
+
+	cols  = fits.ColDefs(columnlist)
+	tbhdu = fits.BinTableHDU.from_columns(cols)
+	tbhdu.writeto(filecat+'_'.join(maskname))
+
 
 def GetMasterMask(logic=None,*arg):
 	"""
@@ -159,7 +193,7 @@ def TxtToFits(filein=None,fileout=None):
 
 	with open(filein) as csv:
 		line = csv.readline()
-	colnames = [ line_.translate(None,'\n') for line_ in lineline.split(',') ]
+	colnames = [ line_.translate(None,'\n') for line_ in line.split(',') ]
 
 	table = [ [] for _ in colnames ]
 
@@ -175,7 +209,7 @@ def TxtToFits(filein=None,fileout=None):
 				table[col_].append( float(cols[col_]) )
 		csv.close()
 
-	types = [ 'E' for _ in colnames ]
+	types = ['E' for _ in colnames ]
 	columnlist = map(lambda name_,format_,array_: fits.Column( name=name_,format=format_,array=array_ ),colnames,types,table)
 	
 	cols  = fits.ColDefs(columnlist)
