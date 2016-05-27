@@ -20,3 +20,4 @@ def version():
 import catutils
 import magnipy
 import jsonw
+import plotutils
