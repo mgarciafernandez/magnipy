@@ -147,3 +147,39 @@ def GetMasterMask(logic=None,*arg):
 					mask[pix_] *= 0
 
 	return mask
+
+def TxtToFits(filein=None,fileout=None)
+	"""
+	Converts .csv (as read from desdb with E. Sheldon library) to a FITS table.
+
+	-Input:
+		filein (str): The name of the file to read
+		fileout(str): The name of the file to write
+	"""
+
+	with open(filein) as csv:
+		line = csv.readline()
+	colnames = line.split(',')
+
+	table = [ [] for _ in colnames ]
+
+	with open(filein) as csv:
+		line = csv.readline()
+
+		while not line == '':
+			cols = line.split(',')
+			line = csv.readline()
+
+			for col_ in range(len(cols)):
+				table[col_].append( float(cols[col_]) )
+		csv.close()
+
+	types = [ numpy.float32 for _ in colnames ]
+	columnlist = map(lambda name_,format_,array_: fits.Column( name=name_,format=format_,array=array_ ),colnames,types,table)
+	
+	cols  = fits.ColDefs(columnlist)
+	tbhdu = fits.BinTableHDU.from_columns(cols)
+	tbhdu.writeto(fileout)
+
+	return tbhdu
+
