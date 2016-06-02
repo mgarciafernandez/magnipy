@@ -13,7 +13,7 @@ Inside each function there should be enough explanation.
 
 ## Useful Command-Line Instructions.
 
-The function has been designed to be used as API. Nevertheless, their generality allow to perform simple catalog-handling tasks in a single line command. Here we provide some examples (assuming the library is located at '$PYTHONPATH')
+The function has been designed to be used as API. Nevertheless, their generality allow to perform simple catalog-handling tasks in a single line command. Here we provide some examples (assuming the library is located at $PYTHONPATH)
 
 * Convert database csv file to fits:
 ```
