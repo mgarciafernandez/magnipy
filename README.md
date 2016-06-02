@@ -15,5 +15,7 @@ Inside each function there should be enough explanation.
 
 The function has been designed to be used as API. Nevertheless, their generality allow to perform simple catalog-handling tasks in a single line command. Here we provide some examples (assuming the library is located at '$PYTHONPATH')
 
-* Convert database csv file to fits: `python -c "import catutils; catutils.TxtToFits('name.csv','name.fits')"`
-* Append mask values to an existing fits file : `python -c "import catutils; catutils.Mask('filename.fits',['healpix#1.fits','healpix#2'],['namemask#1','namemask#2'])"`
+* Convert database csv file to fits:
+`python -c "import catutils; catutils.TxtToFits('name.csv','name.fits')"`
+* Append mask values to an existing fits file :
+`python -c "import catutils; catutils.Mask('filename.fits',['healpix#1.fits','healpix#2'],['namemask#1','namemask#2'])"`
