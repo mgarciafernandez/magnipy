@@ -7,7 +7,7 @@ Author: Manuel Garcia-Fernandez <manuel.garcia-fernandez@ciemat.es>
 ### Installation Procedure
 No need to compile, nor perfom any installation.
 
-Just copy the `/magnipy` directory to anywhere and add its path to `$PYHTONPATH`. At Bash:
+Just copy the `[./magnipy]` directory to anywhere and add its path to `$PYHTONPATH`. At Bash:
 ```
 export PYTHONPATH=${PYTHONPATH}:/somepath/magnipy
 ```
