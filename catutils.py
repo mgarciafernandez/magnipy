@@ -1,5 +1,5 @@
 from astropy.io import fits
-import healpy, numpy, math, multiprocessing, sklearn
+import healpy, numpy, math, multiprocessing, sklearn, collections
 
 
 __NCPU__ = multiprocessing.cpu_count()
@@ -194,6 +194,10 @@ def TxtToFits(filein=None,fileout=None):
 	with open(filein) as csv:
 		line = csv.readline()
 	colnames = [ line_.translate(None,'\n') for line_ in line.split(',') ]
+
+	duplicated = [item for item, count in collections.Counter(a).items() if count > 1]
+	if not len(duplicated) is 0:
+		raise Exception('There are columns repeated: '+','.join(duplicated) )
 
 	table = [ [] for _ in colnames ]
 	types = ['E' for _ in colnames ]
