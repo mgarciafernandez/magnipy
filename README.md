@@ -25,8 +25,8 @@ Currently trying to avoid as much as possible ROOT dependencies since this is n
 
 ### File Description
 
-The file [./catutils.py](./catutils.py) contains some function utilities to handle catalogs and masks.
-The file [./jsonw.py](./json.py) contains a class description of the 2pacf and implements a json file way of save.
+The file `[./catutils.py](./catutils.py)` contains some function utilities to handle catalogs and masks.
+The file `[./jsonw.py](./json.py)` contains a class description of the 2pacf and implements a json file way of save.
 
 Inside each function there should be enough explanation.
 
