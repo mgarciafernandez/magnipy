@@ -196,6 +196,7 @@ def TxtToFits(filein=None,fileout=None):
 	colnames = [ line_.translate(None,'\n') for line_ in line.split(',') ]
 
 	table = [ [] for _ in colnames ]
+	types = ['E' for _ in colnames ]
 
 	with open(filein) as csv:
 		line = csv.readline()
@@ -206,10 +207,14 @@ def TxtToFits(filein=None,fileout=None):
 			line = csv.readline()
 
 			for col_ in range(len(cols)):
-				table[col_].append( float(cols[col_]) )
+				try:
+					table[col_].append( float(cols[col_]) )
+				except ValueError:
+					table[col_].append( cols[col_] )
+					types[col_] = '100A'
 		csv.close()
 
-	types = ['E' for _ in colnames ]
+
 	columnlist = map(lambda name_,format_,array_: fits.Column( name=name_,format=format_,array=array_ ),colnames,types,table)
 	
 	cols  = fits.ColDefs(columnlist)
