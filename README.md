@@ -12,21 +12,21 @@ Just copy the `/magnipy` directory to anywhere and add its path to `$PYHTONPATH`
 export PYTHONPATH=${PYTHONPATH}:/somepath/magnipy
 ```
 Besides the Python standard libraries the dependencies are:
-* `numpy`
-* `scipy`
-* `matplotlib`
-* `json`
-* `healpy`
-* `astropy`
-* `scikit-learn`
-* `ROOT` a.k.a. PyROOT, the wrap from CERN's libraries (https://root.cern.ch).
+* numpy
+* scipy
+* matplotlib
+* json
+* healpy
+* astropy
+* scikit-learn
+* ROOT a.k.a. PyROOT, the wrap from CERN's libraries (https://root.cern.ch).
 
 Currently trying to avoid as much as possible ROOT dependencies since this is not installed at all computers.
 
 ### File Description
 
-The file `catutils.py` contains some function utilities to handle catalogs and masks.
-The file `jsonw.py` contains a class description of the 2pacf and implements a json file way of save.
+The file `./catutils.py` contains some function utilities to handle catalogs and masks.
+The file `./jsonw.py` contains a class description of the 2pacf and implements a json file way of save.
 
 Inside each function there should be enough explanation.
 
