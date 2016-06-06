@@ -195,7 +195,7 @@ def TxtToFits(filein=None,fileout=None):
 		line = csv.readline()
 	colnames = [ line_.translate(None,'\n') for line_ in line.split(',') ]
 
-	duplicated = [item for item, count in collections.Counter(a).items() if count > 1]
+	duplicated = [item for item, count in collections.Counter(colnames).items() if count > 1]
 	if not len(duplicated) is 0:
 		raise Exception('There are columns repeated: '+','.join(duplicated) )
 
