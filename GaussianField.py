@@ -68,8 +68,20 @@ class MatterDensityContrast(object):
 if __name__ == "__main__":
 
 	parser = argparse.ArgumentParser()
-	parser.add_argument("--seed","Set seed of the random number generator of the gaussian random field.",type=int)
+	parser.add_argument("-sm","Set seed of the random number generator of the gaussian random field.",type=int)
+	parser.add_argument("-sg","Set seed of the random number generator of the galaxy coordinates.",type=int)
 	parser.add_argument("-N","Set the number of modes of the harmonic space to test.",type=int)
 	parser.add_argument("-L","Set the length of the squared box.",type=float)
+	parser.add_argument("-pk","File path to CAMB.",type=str)
+	parser.add_argument("--Ngal","Number of galaxies",type=int)
+	parser.add_argument("-o","Outfile",type=str)
 	args = parser.parse_args()
+
+	matter_field = MatterDensityContrast(cambfile=args.pk,N=args.N,L=args.L,seed=args.sm)
+	galaxies = matter_field.GetGalaxies(Ngal=args.Ngal,seed=args.sg)
+
+	with open(args.o) as f:
+		for ra_,dec_ in galaxies:
+			f.write( str(ra)+' '+str(dec)+'\n' )
+		f.close()
 
