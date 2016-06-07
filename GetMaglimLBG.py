@@ -12,7 +12,7 @@ for i_ in xrange(len(balrog)):
 	dec = balrog['dec'][i_]
 
 	mag     = [ balrog['mag_auto_g'][i_], balrog['mag_auto_r'][i_], balrog['mag_auto_i'][i_], balrog['mag_auto_z'][i_] ]
-	flux    = [ balrog['flux_auto_g'][i_], balrog['fluxauto_r'][i_], balrog['flux_auto_i'][i_], balrog['flux_auto_z'][i_] ]
+	flux    = [ balrog['flux_auto_g'][i_], balrog['flux_auto_r'][i_], balrog['flux_auto_i'][i_], balrog['flux_auto_z'][i_] ]
 	fluxerr = [ balrog['fluxerr_auto_g'][i_], balrog['fluxerr_auto_r'][i_], balrog['fluxerr_auto_i'][i_], balrog['fluxerr_auto_z'][i_] ]
 
 	if not balrog['spread_model_i'] + 3*balrog['spread_model_i'] < 0.003:
