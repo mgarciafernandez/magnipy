@@ -1,25 +1,28 @@
 #!/usr/bin/env python
 
 from astropy.io import fits
-import healpy, numpy, sys
+import healpy, numpy, argparse
 
+if __name__ == "__main__":	
 
-balrog = fits.open(sys.argv[1])[1].data
-mask   = numpy.zeros(healpy.nside2npix(4096))
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--sim","-s",help="Path to Balrog simulated file.",type=str)
+	parser.add_argument("--out","-o",help="Name of the mask to write.",type=str)
+	parser.add_argument("--band","-b",help="Band to get the magnitude limit",type=str)
+	args = parser.parse_args()
 
-for i_ in xrange(len(balrog)):
-	ra  = balrog['ra'][i_]
-	dec = balrog['dec'][i_]
+	balrog = fits.open(args.sim)[1].data
 
-	mag     = [ balrog['mag_auto_g'][i_], balrog['mag_auto_r'][i_], balrog['mag_auto_i'][i_], balrog['mag_auto_z'][i_] ]
-	flux    = [ balrog['flux_auto_g'][i_], balrog['flux_auto_r'][i_], balrog['flux_auto_i'][i_], balrog['flux_auto_z'][i_] ]
-	fluxerr = [ balrog['fluxerr_auto_g'][i_], balrog['fluxerr_auto_r'][i_], balrog['fluxerr_auto_i'][i_], balrog['fluxerr_auto_z'][i_] ]
+	for band in ['g','r','i','z']:
+		balrog = balrog[ balrog['flux_auto_'+band]>2*balrog['fluxerr_auto_'+band] ]
+	balrog = balrog[ balrog['spread_model_i']+2*balrog['spreaderr_model_i']<0.003 ]
 
-	if not balrog['spread_model_i'] + 3*balrog['spread_model_i'] < 0.003:
-		continue
+	mask   = numpy.zeros(healpy.nside2npix(4096))
 
+	for i_ in xrange(len(balrog)):
+		ra  = balrog['ra'][i_]
+		dec = balrog['dec'][i_]
 
-	if all( map(lambda flux_,fluxerr_:flux_>2*fluxerr_,flux,fluxerr) ):
 		if ra > 180.:
 			ra -= 360.
 		tht = (90.-dec)*numpy.pi/180.
@@ -27,7 +30,7 @@ for i_ in xrange(len(balrog)):
 
 		pix = healpy.ang2pix(4096,tht,phi,nest=False)
 
-		if mag[0] > mask[pix]:
-			mask[pix] = mag[0]
+		if balrog['mag_auto_'+args.band][i_] > mask[pix]:
+			mask[pix] = balrog['mag_auto_'+args.band][i_]
 
-healpy.write_map(sys.argv[2],mask)
+	healpy.write_map(args.out,mask)
