@@ -238,9 +238,9 @@ def Recenter(filename=None,colname=[]):
 		filename (str): the file to recenter.
 		colname (list): a list containing the colnames to recenter.
 	"""
-	catalog  = fits.open(filecat)[1].data
-	colnames = fits.open(filecat)[1].columns.names
-	types    = fits.open(filecat)[1].columns.formats
+	catalog  = fits.open(filename)[1].data
+	colnames = fits.open(filename)[1].columns.names
+	types    = fits.open(filename)[1].columns.formats
 
 	for col_ in colname:
 		for ra_ in catalog[col_]:
@@ -249,7 +249,7 @@ def Recenter(filename=None,colname=[]):
 
 	table = []
 	for i_ in range(len(colnames)):
-		table.append( data[colnames[i_]] )
+		table.append( catalog[colnames[i_]] )
 
 	columnlist = map(lambda name_,format_,array_: fits.Column( name=name_,format=format_,array=array_ ),colnames,types,table)
 	
