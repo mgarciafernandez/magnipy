@@ -63,6 +63,10 @@ def GetMaskArray(filename=None,ra=[],dec=[],units='degrees'):
 	if not units in ['degrees','radians','arcmin']:
 		raise ValueError('No recognized angular units.')
 
+	for ra_ in ra:
+		if ra_ > 180.:
+			ra_ -= 360.
+
 	if units == 'degrees':
 		ra  = map(lambda ra_ : ra_ *numpy.pi/180.,ra )
 		dec = map(lambda dec_: dec_*numpy.pi/180.,dec)
