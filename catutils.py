@@ -231,20 +231,29 @@ def TxtToFits(filein=None,fileout=None):
 	return tbhdu
 
 
-def Recenter(ra=[]):
+def Recenter(filename=None,colname=[]):
 	"""
-	Given an array with 0 < ra < 360 recenters at -180 < ra < 180
+	Given a catalog, recenters a set of columns from the 0 < ra < 360 to -180 < ra < 180.
 	-Input:
-		ra (list): the list to recenter.
-	-OutputL
-		raC (list): the list recentered.
+		filename (str): the file to recenter.
+		colname (list): a list containing the colnames to recenter.
 	"""
+	catalog  = fits.open(filecat)[1].data
+	colnames = fits.open(filecat)[1].columns.names
+	types    = fits.open(filecat)[1].columns.formats
 
-	raC = []
-	for ra_ in ra:
-		if ra_ > 180.:
-			raC.append( ra_-360. )
-		else:
-			raC.append( ra_ )
+	for col_ in colname:
+		for ra_ in catalog[col_]:
+			if ra_ > 180.:
+				ra_ -= 360.
 
-	return raC
+	table = []
+	for i_ in range(len(colnames)):
+		table.append( data[colnames[i_]] )
+
+	columnlist = map(lambda name_,format_,array_: fits.Column( name=name_,format=format_,array=array_ ),colnames,types,table)
+	
+	cols  = fits.ColDefs(columnlist)
+	tbhdu = fits.BinTableHDU.from_columns(cols)
+	tbhdu.writeto(filename+'_centered')
+
