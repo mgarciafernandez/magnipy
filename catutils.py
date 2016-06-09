@@ -72,7 +72,7 @@ def GetMaskArray(filename=None,ra=[],dec=[],units='degrees'):
 		dec = map(lambda dec_: dec_/60.,dec)
 	
 	ordering = fits.open(filename)[1].header['ordering']
-	nside    = fits.open(filename)[1].header['naxis1']
+	nside    = fits.open(filename)[1].header['nside']
 	
 	if ordering == 'NESTED':
 		isnest = True
