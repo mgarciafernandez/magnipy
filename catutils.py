@@ -238,6 +238,10 @@ def Recenter(filename=None,colname=[]):
 		filename (str): the file to recenter.
 		colname (list): a list containing the colnames to recenter.
 	"""
+
+	if len(colname) is 0:
+		raise Exception('WARNING: no colname given to recenter')
+
 	catalog  = fits.open(filename)[1].data
 	colnames = fits.open(filename)[1].columns.names
 	types    = fits.open(filename)[1].columns.formats
