@@ -246,14 +246,22 @@ def Recenter(filename=None,colname=[]):
 	colnames = fits.open(filename)[1].columns.names
 	types    = fits.open(filename)[1].columns.formats
 
+
+	newcol = {}
 	for col_ in colname:
+		newcol[col_] = []
 		for ra_ in catalog[col_]:
 			if ra_ > 180.:
-				ra_ -= 360.
+				newcol[col_].append( ra_ - 360. )
+			else:
+				newcol[col_].append( ra_ )
 
 	table = []
 	for i_ in range(len(colnames)):
-		table.append( catalog[colnames[i_]] )
+		if colnames[i_] in colname:
+			table.append( newcol[colnames[i_]] )
+		else:
+			table.append( catalog[colnames[i_]] )
 
 	columnlist = map(lambda name_,format_,array_: fits.Column( name=name_,format=format_,array=array_ ),colnames,types,table)
 	
