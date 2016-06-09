@@ -63,10 +63,6 @@ def GetMaskArray(filename=None,ra=[],dec=[],units='degrees'):
 	if not units in ['degrees','radians','arcmin']:
 		raise ValueError('No recognized angular units.')
 
-	for ra_ in ra:
-		if ra_ > 180.:
-			ra_ -= 360.
-
 	if units == 'degrees':
 		ra  = map(lambda ra_ : ra_ *numpy.pi/180.,ra )
 		dec = map(lambda dec_: dec_*numpy.pi/180.,dec)
@@ -216,7 +212,10 @@ def TxtToFits(filein=None,fileout=None):
 
 			for col_ in range(len(cols)):
 				try:
-					table[col_].append( float(cols[col_]) )
+					if cols[col_] is 'ra' and float(cols[col_]) > 180.:
+						table[col_].append( float(cols[col_])-360. )
+					else:
+						table[col_].append( float(cols[col_]) )
 				except ValueError:
 					table[col_].append( cols[col_] )
 					types[col_] = '100A'
@@ -231,3 +230,21 @@ def TxtToFits(filein=None,fileout=None):
 
 	return tbhdu
 
+
+def Recenter(ra=[]):
+	"""
+	Given an array with 0 < ra < 360 recenters at -180 < ra < 180
+	-Input:
+		ra (list): the list to recenter.
+	-OutputL
+		raC (list): the list recentered.
+	"""
+
+	raC = []
+	for ra_ in ra:
+		if ra_ > 180.:
+			raC.append( ra_-360. )
+		else:
+			raC.append( ra_ )
+
+	return raC
