@@ -24,9 +24,9 @@ def DoRandomFlat(N=1,ra=[],dec=[],masks=[],masknames=[]):
 	while len(ra_r) < N:
 		ra_tmp  = rnd.Uniform(ra[0],ra[1])
 		cth_tmp = rnd.Uniform(math.cos((90.-dec[0])*numpy.pi/180.),math.cos((90.-dec[1])*numpy.pi/180.))
-		dec_tmp = 90.-math.acos(cth)*180./numpy.pi
+		dec_tmp = 90.-math.acos(cth_tmp)*180./numpy.pi
 
-		ra_r.apend( ra_tmp )
+		ra_r.append( ra_tmp )
 		dec_r.append( dec_tmp )
 
 	mask_array = []
