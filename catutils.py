@@ -230,6 +230,28 @@ def TxtToFits(filein=None,fileout=None):
 
 	return tbhdu
 
+def FitsToTxT(filein=None,fileout=None):
+	"""
+	Converts to .csv (as read from desdb with E. Sheldon library) from a FITS table.
+
+	-Input:
+		fileout (str): The name of the file to read
+		filein(str): The name of the file to write
+	"""
+
+	catalog  = fits.open(filein)[1].data
+	colnames = fits.open(filein)[1].columns.names
+
+	with open(fileout,'w') as write_file:
+		write_file.write( ','.join(colnames) )
+
+		for ii in xrange(len(catalog)):
+			line = []
+			for col_ in colnames:
+				line.append( str(catalog[col_]) )
+			write_file.write( ','.join( line ) )
+
+		write_file.close()
 
 def Recenter(filename=None,colname=[]):
 	"""
