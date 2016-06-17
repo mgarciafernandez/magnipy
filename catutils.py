@@ -243,13 +243,13 @@ def FitsToTxT(filein=None,fileout=None):
 	colnames = fits.open(filein)[1].columns.names
 
 	with open(fileout,'w') as write_file:
-		write_file.write( ','.join(colnames) )
+		write_file.write( ','.join(colnames)+'\n' )
 
-		for ii in xrange(len(catalog)):
+		for i_ in xrange(len(catalog)):
 			line = []
 			for col_ in colnames:
-				line.append( str(catalog[col_]) )
-			write_file.write( ','.join( line ) )
+				line.append( str(catalog[col_][i_]) )
+			write_file.write( ','.join( line )+'\n' )
 
 		write_file.close()
 
