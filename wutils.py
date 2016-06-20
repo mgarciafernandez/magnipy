@@ -72,3 +72,68 @@ def ReweightKNN(array_to_match,array_to_reweight,keys,nn=100):
 
 	return w_norm
 
+def Get2pacf(data_lens=[],data_sour=None,rand_lens=[],rand_sour=None):
+	"""
+	Computes the 2pacf density-density cross/auto-correlation.
+	-Input:
+		data_lens (list): a list containing [ra,dec,weight] for the lens. If weight is not provided, ti will be assumed as 1.
+		data_sour (list): a list containing [ra,dec,weight] for the source. If weight is not provided, ti will be assumed as 1.
+				  if None, the auto-correlation will be computed instead of the cross.
+		rand_lens (list): a list containing [ra,dec,weight] for the random sample associated with the lens.
+		rand_sour (list): a list containing [ra,dec,weight] for the random sample associated with the source.
+	-Output:
+		xi (list): a list (xi,sigma) such that xi contains the value of the 2pacf and sigma the Poisson error.
+		th (list): a list containing the angle values of the bins where the 2pacf is computed.
+		
+	"""
+
+	if len(data_lens) == 2:
+		lens_cat = treecorr.Catalog(ra=data_lens[0],dec=data_lens[1],ra_units='degrees',dec_units='degrees')
+	elif len(data_lens) == 3:
+		lens_cat = treecorr.Catalog(ra=data_lens[0],dec=data_lens[1],w=data_lens[2],ra_units='degrees',dec_units='degrees')
+	else:
+		raise ValueError('Too many lens parameters.')
+	if len(rand_lens) == 2:
+		lens_cat = treecorr.Catalog(ra=rand_lens[0],dec=rand_lens[1],ra_units='degrees',dec_units='degrees')
+	elif len(rand_lens) == 3:
+		lens_rnd = treecorr.Catalog(ra=rand_lens[0],dec=rand_lens[1],w=rand_lens[2],ra_units='degrees',dec_units='degrees')
+	else:
+		raise ValueError('Too many lens parameters.')
+
+	if data_sour is None and not rand_sour is None:
+		raise Exception('Not data of sources provided')
+	if rand_sour is None and not data_sour is None:
+		raise Exception('Not rand of sources provided')
+
+	if data_sour is None and rand_sour is None:
+		data_sour = data_lens
+		rand_sour = rand_lens
+
+	if len(data_sour) == 2:
+		sour_cat = treecorr.Catalog(ra=data_sour[0],dec=data_sour[1],ra_units='degrees',dec_units='degrees')
+	elif len(data_lens) == 3:
+		sour_cat = treecorr.Catalog(ra=data_sour[0],dec=data_sour[1],w=data_sour[2],ra_units='degrees',dec_units='degrees')
+	else:
+		raise ValueError('Too many lens parameters.')
+	if len(rand_sour) == 2:
+		sour_rnd = treecorr.Catalog(ra=rand_sour[0],dec=rand_sour[1],ra_units='degrees',dec_units='degrees')
+	elif len(rand_sour) == 3:
+		sour_rnd = treecorr.Catalog(ra=rand_sour[0],dec=rand_sour[1],w=rand_sour[2],ra_units='degrees',dec_units='degrees')
+	else:
+		raise ValueError('Too many lens parameters.')
+
+
+	dd = treecorr.NNCorrelation(nbins=6,min_sep=0.01,max_sep=1.0,sep_units='degrees')
+	dr = treecorr.NNCorrelation(nbins=6,min_sep=0.01,max_sep=1.0,sep_units='degrees')
+	rd = treecorr.NNCorrelation(nbins=6,min_sep=0.01,max_sep=1.0,sep_units='degrees')
+	rr = treecorr.NNCorrelation(nbins=6,min_sep=0.01,max_sep=1.0,sep_units='degrees')
+
+	dd.process(lens_cat,sour_cat)
+	dr.process(lens_cat,sour_rnd)
+	rd.process(lens_rnd,sour_cat)
+	rr.process(lens_rnd,sour_rnd)
+
+	xi = dd.calculateXi(rr=rr,dr=dr,rd=rd)
+	th = dd.meanr
+
+	return xi,th
