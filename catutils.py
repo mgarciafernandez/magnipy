@@ -330,3 +330,39 @@ def ReweightKNN(array_to_match,array_to_reweight,keys,nn=100,ncpu=None):
 
 	return w_norm
 
+def RenameColumn(filein,keysin=[],keysout=[]):
+	"""
+	Renames the columns of a bintable on a fits.
+	-Input:
+		filein (str): The name of the file containing the bintable.
+		keysin (str list): A list containing the names to rename.
+		keysoyt (str list): A list containing the new names on the same order.
+	
+	"""
+	data          = fits.open(filein)[1].data
+	columnnames   = fits.open(filein)[1].columns.names
+	columnformats = fits.open(filein)[1].columns.formats
+
+	if not len(keysin) == len(keysout):
+		raise Exception('The length of the keys lists are different.')
+	for key_ in keysin:
+		if not key_ in columnnames:
+			raise ValueError('The key '+key_+' does not belong to the bintable at '+filein)
+
+
+	newcolnames = []
+	newdata     = []
+	for col_ on columnnames:
+		if col_ in keysin:
+			newcolnames.append( keysout[keysin.index(col_)] )
+		else:
+			newcolnames.append( col_ )
+		newdata.append( data[col_] )
+
+	columnlist = map(lambda name_,format_,array_: fits.Column( name=name_,format=format_,array=array_ ),newcolnames,columnformats,newdata)
+
+	cols  = fits.ColDefs(columnlist)
+	tbhdu = fits.BinTableHDU.from_columns(cols)
+	tbhdu.writeto(filein+'_renamed')
+
+	return tbhdu
