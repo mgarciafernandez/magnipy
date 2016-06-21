@@ -42,7 +42,7 @@ def DoRandomFlat(N=1,ra=[],dec=[],masks=[],masknames=[]):
 	tbhdu = fits.BinTableHDU.from_columns(cols)
 	return tbhdu
 
-def ReweightKNN(array_to_match,array_to_reweight,keys,nn=100):
+def ReweightKNN(array_to_match,array_to_reweight,keys,nn=100,ncpu=None):
 	"""
 	Computes the weights of an given a table with N objects on an k-dim space with the KNN approach.
 	The weights are computed such that the k-dim space of M objects of another reference table.
@@ -55,11 +55,16 @@ def ReweightKNN(array_to_match,array_to_reweight,keys,nn=100):
 		w_norm (float array): the weights normalized at the range (0,1).
 	"""
 
+	if ncpu is None:
+		ncpu = __NCPU__-1
+	elif not ncpu < __NCPU__:
+		ncpu = __NCPU__-1
+
 	array_to_match    = numpy.vstack([array_to_match[key_] for key_ in keys]).T
 	array_to_reweight = numpy.vstack([array_to_reweight[key_] for key_ in keys]).T
 
-	tree_match = sklearn.neighbors.NearestNeighbors(n_neighbors=nn+1).fit(array_to_match)
-	tree_torew = sklearn.neighbors.NearestNeighbors(n_neighbors=nn+1).fit(array_to_reweight)
+	tree_match = sklearn.neighbors.NearestNeighbors(n_neighbors=nn+1,n_jobs=ncpu).fit(array_to_match)
+	tree_torew = sklearn.neighbors.NearestNeighbors(n_neighbors=nn+1,n_jobs=ncpu).fit(array_to_reweight)
 
 	dist_torew,indx_torew = tree_torew.kneighbors(array_to_reweight,n_neighbors=nn+1)
 
