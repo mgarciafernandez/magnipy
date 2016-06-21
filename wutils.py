@@ -63,14 +63,14 @@ def ReweightKNN(array_to_match,array_to_reweight,keys,nn=100,ncpu=None):
 	array_to_match    = numpy.vstack([array_to_match[key_] for key_ in keys]).T
 	array_to_reweight = numpy.vstack([array_to_reweight[key_] for key_ in keys]).T
 
-	tree_match = sklearn.neighbors.NearestNeighbors(n_neighbors=nn+1,n_jobs=ncpu).fit(array_to_match)
 	tree_torew = sklearn.neighbors.NearestNeighbors(n_neighbors=nn+1,n_jobs=ncpu).fit(array_to_reweight)
-
 	dist_torew,indx_torew = tree_torew.kneighbors(array_to_reweight,n_neighbors=nn+1)
 
 	which_nn = numpy.array( [nn]*len(dist_torew) )
 	distance = dist_torew[numpy.arange(len(dist_torew)),which_nn]
-	dist_match,indx_match = tree_match.radius_neighbors(array_to_reweight)
+
+	tree_match = sklearn.neighbors.NearestNeighbors(radius=distance,n_jobs=ncpu).fit(array_to_match)
+	dist_match,indx_match = tree_match.radius_neighbors(array_to_reweight,radius=distance)
 
 	ww = [float(len(d_)) for d_ in dist_match]
 	w_norm = [ w_/sum(ww) for w_ in ww ]
