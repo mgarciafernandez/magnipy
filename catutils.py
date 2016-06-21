@@ -318,7 +318,7 @@ def RenameColumn(filein,keysin=[],keysout=[]):
 
 	newcolnames = []
 	newdata     = []
-	for col_ on columnnames:
+	for col_ in columnnames:
 		if col_ in keysin:
 			newcolnames.append( keysout[keysin.index(col_)] )
 		else:
