@@ -235,7 +235,7 @@ def TxtToFits(filein=None,fileout=None):
 
 	return tbhdu
 
-def FitsToTxT(filein=None,fileout=None):
+def FitsToTxt(filein=None,fileout=None):
 	"""
 	Converts to .csv (as read from desdb with E. Sheldon library) from a FITS table.
 
