@@ -355,7 +355,7 @@ def Downsample(filein,keys=[]):
 	for key_ in keys:
 		newdata.append( data[key_] )
 		newcol.append( key_ )
-		newtype.append( columnformat[columnames.index(key_)] )
+		newtype.append( columnformats[columnnames.index(key_)] )
 
 	columnlist = map(lambda name_,format_,array_: fits.Column( name=name_,format=format_,array=array_ ),newcol,newtype,newdata)
 
