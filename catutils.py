@@ -332,3 +332,34 @@ def RenameColumn(filein,keysin=[],keysout=[]):
 	tbhdu.writeto(filein+'_renamed')
 
 	return tbhdu
+
+def Downsample(filein,keys=[]):
+	"""
+	Selects keys from a fits file and produces a new file.
+	-Input:
+		filein (str): file to read.
+		keys (list): a list containing the columnames to keep.
+	"""
+
+	data          = fits.open(filein)[1].data
+	columnnames   = fits.open(filein)[1].columns.names
+	columnformats = fits.open(filein)[1].columns.formats
+
+	for key_ in keys:
+		if not key_ in columnames:
+			raise ValueError('The name '+key_+' is not present.')
+
+	newdata = []
+	newcol  = []
+	newtype = []	
+	for key_ in keys:
+		newdata.append( data[key_] )
+		newcol.append( key_ )
+		newtype.append( columnformat[columnames.index(key_)] )
+
+	columnlist = map(lambda name_,format_,array_: fits.Column( name=name_,format=format_,array=array_ ),newcol,newtype,newdata)
+
+	cols  = fits.ColDefs(columnlist)
+	tbhdu = fits.BinTableHDU.from_columns(cols)
+	tbhdu.writeto(filein+'_downsample')
+
