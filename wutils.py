@@ -99,7 +99,7 @@ def Get2pacf(data_lens=[],data_sour=None,rand_lens=[],rand_sour=None):
 	else:
 		raise ValueError('Too many lens parameters.')
 	if len(rand_lens) == 2:
-		lens_cat = treecorr.Catalog(ra=rand_lens[0],dec=rand_lens[1],ra_units='degrees',dec_units='degrees')
+		lens_rnd = treecorr.Catalog(ra=rand_lens[0],dec=rand_lens[1],ra_units='degrees',dec_units='degrees')
 	elif len(rand_lens) == 3:
 		lens_rnd = treecorr.Catalog(ra=rand_lens[0],dec=rand_lens[1],w=rand_lens[2],ra_units='degrees',dec_units='degrees')
 	else:
