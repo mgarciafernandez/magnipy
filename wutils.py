@@ -34,12 +34,13 @@ def DoRandomFlat(N=1,ra=[],dec=[],masks=[],masknames=[]):
 		mask_array.append( catutils.GetMaskArray(filemask_,ra=ra_r,dec=dec_r) )	
 
 	colnames = ['ra','dec']+masknames
-	typles   = ['E']*len(colnames)
+	types    = ['E']*len(colnames)
 	arg      = [ra_r,dec_r]+mask_array
 
 	columnlist = map(lambda name_,format_,array_: fits.Column( name=name_,format=format_,array=array_ ),colnames,types,arg)
 	cols  = fits.ColDefs(columnlist)
 	tbhdu = fits.BinTableHDU.from_columns(cols)
+	tbhdu.writeto('random_flat.fits')
 	return tbhdu
 
 def ReweightKNN(array_to_match,array_to_reweight,keys,nn=100,ncpu=None):
