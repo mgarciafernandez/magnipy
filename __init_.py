@@ -22,5 +22,3 @@ def version():
 import catutils
 import wutils
 import magnipy
-import jsonw
-import plotutils
